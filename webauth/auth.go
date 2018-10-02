@@ -7,8 +7,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/nlopes/slack"
-	"gitlab.com/capstonemetering/cerberus/slick"
 	"golang.org/x/oauth2"
 )
 

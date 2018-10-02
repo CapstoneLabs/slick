@@ -9,8 +9,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/gorilla/mux"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func (wicked *Wicked) InitWebPlugin(bot *slick.Bot, privRouter *mux.Router, pubRouter *mux.Router) {

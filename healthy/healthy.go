@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/CapstoneLabs/slick"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 // Hipbot Plugin

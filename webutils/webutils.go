@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/gorilla/mux"
 	"github.com/nlopes/slack"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 type Utils struct {

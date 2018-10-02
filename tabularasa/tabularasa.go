@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/CapstoneLabs/slick"
+	"github.com/CapstoneLabs/slick/asana"
 	"github.com/gorilla/mux"
-	"gitlab.com/capstonemetering/cerberus/slick"
-	"gitlab.com/capstonemetering/cerberus/slick/asana"
 )
 
 type TabulaRasa struct {

@@ -3,8 +3,8 @@ package recognition
 import (
 	log "github.com/sirupsen/logrus"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/boltdb/bolt"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 type Plugin struct {

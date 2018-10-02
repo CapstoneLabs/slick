@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	log "github.com/sirupsen/logrus"
 	"math"
 	"net/http"
 	"time"
 
-	"gitlab.com/capstonemetering/cerberus/slick"
+	log "github.com/sirupsen/logrus"
+
+	"github.com/CapstoneLabs/slick"
 )
 
 type PlotBerry struct {

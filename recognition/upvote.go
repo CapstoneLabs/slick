@@ -5,7 +5,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"gitlab.com/capstonemetering/cerberus/slick"
+	"github.com/CapstoneLabs/slick"
 )
 
 func (p *Plugin) listenUpvotes() {

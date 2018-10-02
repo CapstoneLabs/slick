@@ -8,12 +8,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/nlopes/slack"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 var web *Webapp

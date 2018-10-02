@@ -13,9 +13,9 @@ import (
 	"github.com/kr/pty"
 	"github.com/tuxychandru/pubsub"
 
+	"github.com/CapstoneLabs/slick"
+	"github.com/CapstoneLabs/slick/internal"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/capstonemetering/cerberus/slick"
-	"gitlab.com/capstonemetering/cerberus/slick/internal"
 )
 
 type Deployer struct {

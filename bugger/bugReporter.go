@@ -3,8 +3,8 @@ package bugger
 import (
 	"fmt"
 
-	"gitlab.com/capstonemetering/cerberus/slick/github"
-	"gitlab.com/capstonemetering/cerberus/slick/util"
+	"github.com/CapstoneLabs/slick/github"
+	"github.com/CapstoneLabs/slick/util"
 )
 
 type bugReporter struct {

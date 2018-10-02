@@ -5,8 +5,8 @@ import (
 
 	"golang.org/x/net/websocket"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/gorilla/mux"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func (dep *Deployer) InitWebPlugin(bot *slick.Bot, privRouter *mux.Router, pubRouter *mux.Router) {

@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.com/capstonemetering/cerberus/slick"
+	"github.com/CapstoneLabs/slick"
 )
 
 // Wicked stores the configuration for wicked
@@ -48,7 +48,7 @@ func (wicked *Wicked) InitPlugin(bot *slick.Bot) {
 	}
 
 	bot.LoadConfig(&conf)
-	
+
 	for _, confroom := range conf.Wicked.Confrooms {
 		wicked.confRooms = append(wicked.confRooms, confroom)
 	}
@@ -72,7 +72,7 @@ func (wicked *Wicked) ChatHandler(listen *slick.Listener, msg *slick.Message) {
 
 		if availableRoom == nil {
 			msg.Reply("No available Wicked Confroom for a meeting! Seems you'll need to create new Wicked Confrooms !")
-			goto continueLogging 
+			goto continueLogging
 		}
 
 		id := wicked.NextMeetingID()

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"gitlab.com/capstonemetering/cerberus/slick"
+	"github.com/CapstoneLabs/slick"
 )
 
 type Vote struct {

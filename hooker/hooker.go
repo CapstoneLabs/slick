@@ -8,8 +8,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/gorilla/mux"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func init() {

@@ -51,8 +51,8 @@ Supported features:
 Try it with:
 
 ```
-go get gitlab.com/capstonemetering/cerberus/slick
-cd $GOPATH/src/gitlab.com/capstonemetering/cerberus/slick/example-bot
+go get github.com/CapstoneLabs/slick
+cd $GOPATH/src/github.com/CapstoneLabs/slick/example-bot
 go install -v && $GOPATH/bin/example-bot
 ```
 

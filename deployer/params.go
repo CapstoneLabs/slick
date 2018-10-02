@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"gitlab.com/capstonemetering/cerberus/slick"
+	"github.com/CapstoneLabs/slick"
 )
 
 type DeployParams struct {

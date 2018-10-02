@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.com/capstonemetering/cerberus/slick"
+	"github.com/CapstoneLabs/slick"
 )
 
 var sectionRegexp = regexp.MustCompile(`(?mi)^!(yesterday|today|blocking)`)

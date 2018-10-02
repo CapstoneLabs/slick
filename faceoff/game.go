@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/nlopes/slack"
 	log "github.com/sirupsen/logrus"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 //

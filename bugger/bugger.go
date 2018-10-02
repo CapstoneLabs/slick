@@ -6,9 +6,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"gitlab.com/capstonemetering/cerberus/slick"
-	"gitlab.com/capstonemetering/cerberus/slick/github"
-	"gitlab.com/capstonemetering/cerberus/slick/util"
+	"github.com/CapstoneLabs/slick"
+	"github.com/CapstoneLabs/slick/github"
+	"github.com/CapstoneLabs/slick/util"
 )
 
 const dfltReportLength = 7 // days

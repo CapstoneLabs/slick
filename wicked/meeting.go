@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/CapstoneLabs/slick"
 	"github.com/nlopes/slack"
-	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func init() {
