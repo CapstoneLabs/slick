@@ -6,19 +6,20 @@ package faceoff
 
 import (
 	_ "image/jpeg"
-	"log"
 	"regexp"
 	"sync"
 	"time"
 
-	"github.com/abourget/slick"
 	"github.com/nlopes/slack"
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func init() {
 	slick.RegisterPlugin(&Faceoff{})
 }
 
+// Faceoff contains configuration for running faceoff
 type Faceoff struct {
 	sync.Mutex
 
@@ -28,6 +29,7 @@ type Faceoff struct {
 
 const faceoffKey = "/faceoff/users/stats"
 
+// InitPlugin establishes the regex and listeners
 func (p *Faceoff) InitPlugin(bot *slick.Bot) {
 	p.bot = bot
 
@@ -74,7 +76,13 @@ func (p *Faceoff) InitPlugin(bot *slick.Bot) {
 
 				// on HELLO, once the bot has updated all its Users..
 				p.updateUsersFromSlack()
-				log.Printf("faceoff: got %d profiles\n", len(p.users))
+
+				log.WithFields(log.Fields{
+					"Plugin":   "faceoff",
+					"Type":     "LoadingProfiles",
+					"Quantity": len(p.users),
+				}).Info("Loading profiles.")
+
 				p.flushData()
 			}
 		},
@@ -104,6 +112,6 @@ func (p *Faceoff) updateUsersFromSlack() {
 func (p *Faceoff) flushData() {
 	err := p.bot.PutDBKey(faceoffKey, p.users)
 	if err != nil {
-		log.Println("Failed to flush Faceoff data!", err)
+		log.WithError(err).Error("Failed to flush plugin data.")
 	}
 }

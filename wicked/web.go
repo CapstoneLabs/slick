@@ -3,13 +3,14 @@ package wicked
 import (
 	"encoding/json"
 	"html/template"
-	"log"
 	"net/http"
 	"strings"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/gorilla/mux"
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func (wicked *Wicked) InitWebPlugin(bot *slick.Bot, privRouter *mux.Router, pubRouter *mux.Router) {
@@ -54,7 +55,7 @@ func (wicked *Wicked) renderMeetingHtml(w http.ResponseWriter, r *http.Request) 
 <body>
   <h1>Meeting W{{.ID}}</h1>
   <h2>Goal: {{.Goal}}</h2>
-  <p>In room: {{.Room}}</p>
+  <p>In room: {{.Channel}}</p>
   <p>Created by: {{.CreatedBy.Fullname}}</p>
   <p>
     Started at: {{.StartTime}}
@@ -105,7 +106,7 @@ func (wicked *Wicked) renderMeetingHtml(w http.ResponseWriter, r *http.Request) 
         {{end}}
         {{.Text}}
       </p>
-      <p style="font-size: 90%;">proposed by: <a href="#msg-{{.Timestamp | idify}}">{{.AddedBy.Fullname}}, at {{.Timestamp}}</a></p>
+      <p style="font-size: 90%;">proposed by: {{.AddedBy.Fullname}}, at {{.Timestamp}}</p>
     </div>
     {{end}}
   {{else}}

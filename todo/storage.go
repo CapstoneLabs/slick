@@ -2,7 +2,8 @@ package todo
 
 import (
 	"encoding/json"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/boltdb/bolt"
 )

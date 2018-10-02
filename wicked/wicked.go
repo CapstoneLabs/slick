@@ -17,15 +17,21 @@ import (
 	"strings"
 	"time"
 
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
+// Wicked stores the configuration for wicked
 type Wicked struct {
 	bot          *slick.Bot
 	confRooms    []string
 	meetings     map[string]*Meeting
 	pastMeetings []*Meeting
 }
+
+var (
+	decisionMatcher = regexp.MustCompile(`(?mi)D(\d+)\+\+`)
+	joinMatcher     = regexp.MustCompile(`!join\s+(?mi)W(\d+)`)
+)
 
 func init() {
 	slick.RegisterPlugin(&Wicked{})
@@ -40,7 +46,9 @@ func (wicked *Wicked) InitPlugin(bot *slick.Bot) {
 			Confrooms []string `json:"conf_rooms"`
 		}
 	}
+
 	bot.LoadConfig(&conf)
+	
 	for _, confroom := range conf.Wicked.Confrooms {
 		wicked.confRooms = append(wicked.confRooms, confroom)
 	}
@@ -64,7 +72,7 @@ func (wicked *Wicked) ChatHandler(listen *slick.Listener, msg *slick.Message) {
 
 		if availableRoom == nil {
 			msg.Reply("No available Wicked Confroom for a meeting! Seems you'll need to create new Wicked Confrooms !")
-			goto continueLogging
+			goto continueLogging 
 		}
 
 		id := wicked.NextMeetingID()
@@ -74,9 +82,9 @@ func (wicked *Wicked) ChatHandler(listen *slick.Listener, msg *slick.Message) {
 		wicked.meetings[availableRoom.ID] = meeting
 
 		if availableRoom.ID == fromRoom {
-			meeting.sendToRoom(fmt.Sprintf(`*** Starting wicked meeting W%s in here.`, meeting.ID))
+			meeting.sendToRoom(fmt.Sprintf(`Starting wicked meeting W%s in here.`, meeting.ID))
 		} else {
-			msg.Reply(fmt.Sprintf(`*** Starting wicked meeting W%s in room "%s". Join with !join W%s`, meeting.ID, availableRoom.Name, meeting.ID))
+			msg.Reply(fmt.Sprintf(`Starting wicked meeting W%s in room "%s". Join with !join W%s`, meeting.ID, availableRoom.Name, meeting.ID))
 			initiatedFrom := ""
 			if fromRoom != "" {
 				initiatedFrom = fmt.Sprintf(` in "%s"`, msg.FromChannel.Name)
@@ -84,7 +92,7 @@ func (wicked *Wicked) ChatHandler(listen *slick.Listener, msg *slick.Message) {
 			meeting.sendToRoom(fmt.Sprintf(`*** Wicked meeting initiated by @%s%s. Goal: %s`, msg.FromUser.Name, initiatedFrom, meeting.Goal))
 		}
 
-		meeting.sendToRoom(fmt.Sprintf(`*** Access report at %s/wicked/%s.html`, wicked.bot.Config.WebBaseURL, meeting.ID))
+		meeting.sendToRoom(fmt.Sprintf(`Access report at %s/wicked/%s.html`, wicked.bot.Config.WebBaseURL, meeting.ID))
 		meeting.setTopic(fmt.Sprintf(`[Running] W%s goal: %s`, meeting.ID, meeting.Goal))
 	} else if strings.HasPrefix(msg.Text, "!join") {
 		match := joinMatcher.FindStringSubmatch(msg.Text)
@@ -93,7 +101,7 @@ func (wicked *Wicked) ChatHandler(listen *slick.Listener, msg *slick.Message) {
 		} else {
 			for _, meeting := range wicked.meetings {
 				if match[1] == meeting.ID {
-					meeting.sendToRoom(fmt.Sprintf(`*** @%s asked to join`, msg.FromUser.Name))
+					meeting.sendToRoom(fmt.Sprintf(`<@%s> asked to join`, msg.FromUser.Name))
 				}
 			}
 		}
@@ -136,13 +144,11 @@ continueLogging:
 		meeting.setTopic(fmt.Sprintf(`[Concluded] W%s goal: %s`, meeting.ID, meeting.Goal))
 
 	} else if match := decisionMatcher.FindStringSubmatch(msg.Text); match != nil {
-
 		decision := meeting.GetDecisionByID(match[1])
 		if decision != nil {
 			decision.RecordPlusplus(user)
 			msg.ReplyMention("noted")
 		}
-
 	}
 
 	// Log message
@@ -188,6 +194,3 @@ func (wicked *Wicked) NextMeetingID() string {
 	}
 	return "fail"
 }
-
-var decisionMatcher = regexp.MustCompile(`(?mi)D(\d+)\+\+`)
-var joinMatcher = regexp.MustCompile(`!join\s+(?mi)W(\d+)`)

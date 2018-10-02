@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func (standup *Standup) InitWebPlugin(bot *slick.Bot, privRouter *mux.Router, pubRouter *mux.Router) {

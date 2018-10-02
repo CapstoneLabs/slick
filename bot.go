@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"reflect"
@@ -12,6 +11,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/boltdb/bolt"
 	"github.com/nlopes/slack"
@@ -24,6 +25,9 @@ type Bot struct {
 	// Global bot configuration
 	configFile string
 	Config     SlackConfig
+
+	// Logging configuration
+	Logging Logging
 
 	// Slack connectivity
 	Slack             *slack.Client
@@ -74,17 +78,24 @@ func New(configFile string) *Bot {
 }
 
 func (bot *Bot) Run() {
+	// Config for Slack and logging are read in
 	bot.loadBaseConfig()
 
+	// Configure logging
+	err := bot.setupLogging()
+	if err != nil {
+		log.Fatal("Error setting up logging.")
+	}
+
 	// Write PID
-	err := bot.writePID()
+	err = bot.writePID()
 	if err != nil {
 		log.Fatal("Couldn't write PID file:", err)
 	}
 
 	db, err := bolt.Open(bot.Config.DBPath, 0600, nil)
 	if err != nil {
-		log.Fatalf("Could not initialize BoltDB key/value store: %s\n", err)
+		log.Fatalf("Could not initialize BoltDB key/value store: %s", err)
 	}
 	defer func() {
 		log.Fatal("Database is closing")
@@ -245,6 +256,9 @@ func (bot *Bot) cacheUsers(users []slack.User) {
 }
 
 func (bot *Bot) cacheChannels(channels []slack.Channel, groups []slack.Group, ims []slack.IM) {
+	log.Debugf("Channels: %v", len(channels))
+	log.Debugf("Groups: %v", len(groups))
+	log.Debugf("DM's: %v", len(ims))
 	bot.Channels = make(map[string]Channel)
 	for _, channel := range channels {
 		bot.updateChannel(ChannelFromSlackChannel(channel))
@@ -261,32 +275,39 @@ func (bot *Bot) cacheChannels(channels []slack.Channel, groups []slack.Group, im
 
 func (bot *Bot) loadBaseConfig() {
 	if err := checkPermission(bot.configFile); err != nil {
-		log.Fatal("ERROR Checking Permissions: ", err)
+		log.WithError(err).Fatal("Error checking permissions.")
 	}
 
 	var config struct {
-		Slack SlackConfig
+		Logging Logging
+		Slack   SlackConfig
 	}
+
 	err := bot.LoadConfig(&config)
 	if err != nil {
-		log.Fatalln("Error loading Slack config section:", err)
-	} else {
-		bot.Config = config.Slack
+		log.WithError(err).Fatalln("Error loading config file.")
 	}
+
+	bot.Config = config.Slack
+	bot.Logging = config.Logging
 }
 
+// LoadConfig reads the config file, unmarshals JSON
 func (bot *Bot) LoadConfig(config interface{}) (err error) {
 	content, err := ioutil.ReadFile(bot.configFile)
 	if err != nil {
-		log.Fatalln("LoadConfig(): Error reading config:", err)
-		return
+		log.WithError(err).Error("Error reading config file.")
+		return err
 	}
-	err = json.Unmarshal(content, &config)
 
+	err = json.Unmarshal(content, &config)
 	if err != nil {
-		log.Println("LoadConfig(): Error unmarshaling JSON", err)
+		log.WithError(err).Error("Error in config JSON syntax.")
+
+		return err
 	}
-	return
+
+	return nil
 }
 
 func (bot *Bot) replyHandler() {
@@ -302,14 +323,24 @@ func (bot *Bot) replyHandler() {
 	}
 }
 
+// SendToChannel sends a message to a given channel
 func (bot *Bot) SendToChannel(channelName string, message string) *Reply {
 	channel := bot.GetChannelByName(channelName)
 
 	if channel == nil {
-		log.Printf("Couldn't send message, channel %q not found: %q\n", channelName, message)
+		log.WithFields(log.Fields{
+			"Type":    "ChannelNotFound",
+			"Channel": channelName,
+		}).Error("Error sending message to channel.")
+
 		return nil
 	}
-	log.Printf("Sending to channel %q: %q\n", channelName, message)
+
+	log.WithFields(log.Fields{
+		"Type":    "SendingMessage",
+		"Channel": channelName,
+		"Message": message,
+	}).Debug("Sending message to channel.")
 
 	return bot.SendOutgoingMessage(message, channel.ID)
 }
@@ -317,28 +348,52 @@ func (bot *Bot) SendToChannel(channelName string, message string) *Reply {
 // SendOutgoingMessage schedules the message for departure and returns
 // a Reply which can be listened on. See type `Reply`.
 func (bot *Bot) SendOutgoingMessage(text string, to string) *Reply {
-	fmt.Println("SENDING MESSAGE", text, to)
+	log.WithFields(log.Fields{
+		"Type":      "SendingMessage",
+		"Recipient": to,
+		"Message":   text,
+	}).Debug("Sending outgoing message.")
+
 	outMsg := bot.rtm.NewOutgoingMessage(text, to)
 	bot.outgoingMsgCh <- outMsg
+
 	return &Reply{outMsg, bot}
 }
 
+// SendPrivateMessage sends a message to a user
 func (bot *Bot) SendPrivateMessage(username, message string) *Reply {
 	user := bot.GetUser(username)
 	if user == nil {
-		log.Printf("ERROR sending message, user %q not found, dropping message: %q\n", username, message)
+		log.WithFields(log.Fields{
+			"Type":      "UserDoesNotExist",
+			"Recipient": username,
+			"Message":   message,
+		}).Warn("Error sending message.")
+
 		return nil
 	}
 
 	imChannel := bot.OpenIMChannelWith(user)
 	if imChannel == nil {
-		log.Printf("ERROR initiating private conversation with user %q (%s), dropping message: %q\n", user.ID, user.Name, message)
+		log.WithFields(log.Fields{
+			"Type":         "IMChannelDoesNotExist",
+			"Recipient":    user.Name,
+			"Recipient ID": user.ID,
+			"Message":      message,
+		}).Warn("Error sending message.")
+
 		return nil
 	}
 
-	fmt.Println("SENDING PRIVATE MESSAGE", message, imChannel.ID)
+	log.WithFields(log.Fields{
+		"Type":       "SendingPrivateMessage",
+		"IM Channel": imChannel.ID,
+		"Message":    message,
+	}).Info("Sending private message.")
+
 	outMsg := bot.rtm.NewOutgoingMessage(message, imChannel.ID)
 	bot.outgoingMsgCh <- outMsg
+
 	return &Reply{outMsg, bot}
 }
 
@@ -352,8 +407,6 @@ func (bot *Bot) removeListener(listen *Listener) {
 			return
 		}
 	}
-
-	return
 }
 
 func (bot *Bot) messageHandler() {
@@ -385,6 +438,7 @@ func (bot *Bot) messageHandler() {
 
 func (bot *Bot) handleRTMEvent(event *slack.RTMEvent) {
 	var msg *Message
+	var client = bot.Slack
 	//var reaction interface{}
 
 	switch ev := event.Data.(type) {
@@ -392,15 +446,45 @@ func (bot *Bot) handleRTMEvent(event *slack.RTMEvent) {
 	 * Connection handling...
 	 */
 	case *slack.LatencyReport:
-		log.Printf("Current latency: %v\n", ev)
+		log.WithFields(log.Fields{
+			"Type":    "LatencyReport",
+			"Latency": ev.Value,
+		}).Debug("Latency Report.")
 	case *slack.RTMError:
-		log.Printf("Error: %d - %s\n", ev.Code, ev.Msg)
-
+		log.WithFields(log.Fields{
+			"Type":      "RTMError",
+			"ErrorCode": ev.Code,
+			"Message":   ev.Msg,
+		}).Error("Real Time Messenger Error.")
 	case *slack.ConnectedEvent:
-		log.Printf("Bot connected, connection_count=%d\n", ev.ConnectionCount)
+		// Replacing ev.Info.Channels
+		channels, err := client.GetChannels(false)
+		if err != nil {
+			panic("SLACK DEPRECATED ANOTHER API LOL")
+		}
+
+		// Replacing ev.Info.Groups
+		groups, err := client.GetGroups(false)
+		if err != nil {
+			panic("SLACK DEPRECATED ANOTHER API LOL")
+		}
+
+		// Replacing ev.Info.IMs
+		ims, err := client.GetIMChannels()
+		if err != nil {
+			panic("SLACK DEPRECATED ANOTHER API LOL")
+		}
+
+		// Replacing ev.Info.Users
+		users, err := client.GetUsers()
+		if err != nil {
+			panic("SLACK DEPRECATED ANOTHER API LOL")
+		}
+
+		log.Printf("Bot connected, connection_count=%d", ev.ConnectionCount)
 		bot.Myself = *ev.Info.User
-		bot.cacheUsers(ev.Info.Users)
-		bot.cacheChannels(ev.Info.Channels, ev.Info.Groups, ev.Info.IMs)
+		bot.cacheUsers(users)                    // Info.Users is deprecated
+		bot.cacheChannels(channels, groups, ims) // Info.Channels is deprecated
 
 		for _, channelName := range bot.Config.JoinChannels {
 			channel := bot.GetChannelByName(channelName)
@@ -413,7 +497,7 @@ func (bot *Bot) handleRTMEvent(event *slack.RTMEvent) {
 		log.Println("Bot disconnected")
 
 	case *slack.ConnectingEvent:
-		log.Printf("Bot connecting, connection_count=%d, attempt=%d\n", ev.ConnectionCount, ev.Attempt)
+		log.Printf("Bot connecting, connection_count=%d, attempt=%d", ev.ConnectionCount, ev.Attempt)
 
 	case *slack.HelloEvent:
 		log.Println("Got a HELLO from websocket")
@@ -422,7 +506,10 @@ func (bot *Bot) handleRTMEvent(event *slack.RTMEvent) {
 	 * Message dispatch and handling
 	 */
 	case *slack.MessageEvent:
-		log.Printf("Message: %#v\n", ev)
+		log.WithFields(log.Fields{
+			"Message": ev,
+		}).Debug("Message received.")
+
 		msg = &Message{
 			Msg:        &ev.Msg,
 			SubMessage: ev.SubMessage,
@@ -455,23 +542,37 @@ func (bot *Bot) handleRTMEvent(event *slack.RTMEvent) {
 			}
 		}
 
+		// We do some heavy logging here because this is troublesome
+		// to find when it breaks and Slack breaks it by deprecating API's
+
 		user, ok := bot.Users[userID]
 		if ok {
+			log.Debug("User map is ok.")
 			msg.FromUser = &user
+		} else {
+			log.WithFields(log.Fields{
+				"Type":  "BrokenUserMap",
+				"Users": len(bot.Users),
+			}).Error("User map is broken.")
 		}
+
 		channel, ok := bot.Channels[ev.Channel]
 		if ok {
+			log.Debug("Channel map is ok.")
 			msg.FromChannel = &channel
+		} else {
+			log.WithFields(log.Fields{
+				"Type":     "BrokenChannelMap",
+				"Channels": len(bot.Channels),
+			}).Error("Channel map is broken.")
 		}
 
 		msg.applyMentionsMe(bot)
 		msg.applyFromMe(bot)
 
-		//log.Printf("Incoming message subtype=%q:\n\t%q\n\tMessage: %s\n\tmsg.Msg: %#v\n\tSubMessage: %#v\n", msg.Msg.SubType, msg.Text, msg, msg.Msg, msg.SubMessage)
-
 	case *slack.PresenceChangeEvent:
 		user := bot.Users[ev.User]
-		log.Printf("User %q is now %q\n", user.Name, ev.Presence)
+		log.Printf("User %q is now %q", user.Name, ev.Presence)
 		user.Presence = ev.Presence
 
 	// TODO: manage im_open, im_close, and im_created ?
@@ -582,11 +683,11 @@ func (bot *Bot) handleRTMEvent(event *slack.RTMEvent) {
 	 */
 	case *slack.AckErrorEvent:
 		jsonCnt, _ := json.MarshalIndent(ev, "", "  ")
-		fmt.Printf("Error: %s\n", jsonCnt)
+		fmt.Printf("Error: %s", jsonCnt)
 
 	default:
-		log.Printf("Event: %T\n", ev)
-		//log.Printf("Unexpected: %#v\n", ev)
+		log.Printf("Event: %T", ev)
+		//log.Printf("Unexpected: %#v", ev)
 	}
 
 	// Dispatch listeners
@@ -616,7 +717,7 @@ func (bot *Bot) Disconnect() {
 // GetUser returns a *slack.User by ID, Name, RealName or Email
 func (bot *Bot) GetUser(find string) *slack.User {
 	for _, user := range bot.Users {
-		//log.Printf("Hmmmm, %#v\n", user)
+		//log.Printf("Hmmmm, %#v", user)
 		if user.Profile.Email == find || user.ID == find || user.Name == find || user.RealName == find {
 			return &user
 		}
@@ -653,7 +754,7 @@ func (bot *Bot) OpenIMChannelWith(user *slack.User) *Channel {
 		return dmChannel
 	}
 
-	log.Printf("Opening a new IM conversation with %q (%s)\n", user.ID, user.Name)
+	log.Printf("Opening a new IM conversation with %q (%s)", user.ID, user.Name)
 	_, _, chanID, err := bot.Slack.OpenIMChannel(user.ID)
 	if err != nil {
 		return nil

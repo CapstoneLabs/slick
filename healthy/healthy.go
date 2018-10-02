@@ -2,16 +2,16 @@ package healthy
 
 import (
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
-	"github.com/abourget/slick"
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 // Hipbot Plugin
 type Healthy struct {
-	urls   []string
+	urls []string
 }
 
 func init() {
@@ -30,9 +30,9 @@ func (healthy *Healthy) InitPlugin(bot *slick.Bot) {
 	healthy.urls = conf.HealthCheck.Urls
 
 	bot.Listen(&slick.Listener{
-		MentionsMeOnly: true,
-		ContainsAny:    []string{"health", "healthy?", "health_check"},
-		MessageHandlerFunc:    healthy.ChatHandler,
+		MentionsMeOnly:     true,
+		ContainsAny:        []string{"health", "healthy?", "health_check"},
+		MessageHandlerFunc: healthy.ChatHandler,
 	})
 }
 

@@ -3,7 +3,7 @@ package wicked
 import (
 	"testing"
 
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func TestFindNextRoom(t *testing.T) {

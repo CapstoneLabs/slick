@@ -3,12 +3,13 @@ package plotberry
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/abourget/slick"
 	"io/ioutil"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"math"
 	"net/http"
 	"time"
+
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 type PlotBerry struct {
@@ -50,7 +51,7 @@ func (plotberry *PlotBerry) ChatHandler(listen *slick.Listener, msg *slick.Messa
 	return
 }
 
-func getplotberry () (*TotalUsers, error) {
+func getplotberry() (*TotalUsers, error) {
 
 	var data TotalUsers
 

@@ -1,11 +1,12 @@
 package totw
 
 import (
-	"log"
 	"strings"
 	"time"
 
-	"github.com/abourget/slick"
+	log "github.com/sirupsen/logrus"
+
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 type Totw struct {

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/abourget/slick"
 	"github.com/nlopes/slack"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func init() {
@@ -56,7 +56,7 @@ func NewMeeting(id string, user *slack.User, goal string, bot *slick.Bot, channe
 	meeting.Logs = []*Message{}
 	meeting.Participants = []*User{}
 	meeting.sendToRoom = func(msg string) {
-		bot.SendToChannel(meeting.ChannelID, msg)
+		bot.SendToChannel(meeting.Channel, msg)
 	}
 	meeting.setTopic = func(topic string) {
 		// TODO: set a topic with Slack.

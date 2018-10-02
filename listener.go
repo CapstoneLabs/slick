@@ -2,9 +2,10 @@ package slick
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/nlopes/slack"
 )

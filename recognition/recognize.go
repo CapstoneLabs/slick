@@ -2,13 +2,14 @@ package recognition
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
 
-	"github.com/abourget/slick"
+	log "github.com/sirupsen/logrus"
+
 	"github.com/nlopes/slack"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func (p *Plugin) listenRecognize() {

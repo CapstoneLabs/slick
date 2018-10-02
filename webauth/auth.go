@@ -3,11 +3,12 @@ package webauth
 import (
 	"encoding/gob"
 	"fmt"
-	"log"
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/nlopes/slack"
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 	"golang.org/x/oauth2"
 )
 

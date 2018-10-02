@@ -3,10 +3,12 @@ package github
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+
 	"net/http"
 	"strconv"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const searchIssueURL = "https://api.github.com/search/issues"

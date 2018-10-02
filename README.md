@@ -1,8 +1,6 @@
 # Slick - A Slack bot in Go
 
-[![Build Status](https://drone.io/github.com/abourget/slick/status.png)](https://drone.io/github.com/abourget/slick/latest)
-
-Slick is a Slack bot to do ChatOps and other cool things.
+Slick is a Slack bot to do ChatOps and other cool things. Slick was originally developed [here](https://github.com/abourget/slick) and has since been adopted by Capstone for internal use :)
 
 
 ## Features
@@ -53,8 +51,8 @@ Supported features:
 Try it with:
 
 ```
-go get github.com/abourget/slick
-cd $GOPATH/src/github.com/abourget/slick/example-bot
+go get gitlab.com/capstonemetering/cerberus/slick
+cd $GOPATH/src/gitlab.com/capstonemetering/cerberus/slick/example-bot
 go install -v && $GOPATH/bin/example-bot
 ```
 

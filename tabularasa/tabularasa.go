@@ -6,8 +6,8 @@ import (
 	"sync"
 
 	"github.com/gorilla/mux"
-	"github.com/abourget/slick"
-	"github.com/abourget/slick/asana"
+	"gitlab.com/capstonemetering/cerberus/slick"
+	"gitlab.com/capstonemetering/cerberus/slick/asana"
 )
 
 type TabulaRasa struct {

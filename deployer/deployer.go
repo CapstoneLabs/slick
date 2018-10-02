@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"regexp"
@@ -14,8 +13,9 @@ import (
 	"github.com/kr/pty"
 	"github.com/tuxychandru/pubsub"
 
-	"github.com/abourget/slick"
-	"github.com/abourget/slick/internal"
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/capstonemetering/cerberus/slick"
+	"gitlab.com/capstonemetering/cerberus/slick/internal"
 )
 
 type Deployer struct {
@@ -61,8 +61,8 @@ func (dep *Deployer) InitPlugin(bot *slick.Bot) {
 	go dep.pubsubForwardReply()
 
 	bot.Listen(&slick.Listener{
-		MessageHandlerFunc:    dep.ChatHandler,
-		MentionsMeOnly: true,
+		MessageHandlerFunc: dep.ChatHandler,
+		MentionsMeOnly:     true,
 	})
 }
 

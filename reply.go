@@ -1,8 +1,9 @@
 package slick
 
 import (
-	"log"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/nlopes/slack"
 )

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 type Vote struct {
@@ -51,6 +51,7 @@ func (v *Vote) voteHandler(listen *slick.Listener, msg *slick.Message) {
 	}
 
 	if msg.HasPrefix("!what-for-lunch ") || msg.HasPrefix("!vote-for-lunch ") {
+		fmt.Printf("NPD: %v\n", msg)
 		if v.runningVotes[msg.FromChannel.ID] != nil {
 			msg.ReplyMention("vote is already running!").DeleteAfter("3s")
 			return

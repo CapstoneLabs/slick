@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 var sectionRegexp = regexp.MustCompile(`(?mi)^!(yesterday|today|blocking)`)
@@ -54,11 +54,13 @@ func (standup *Standup) manageUpdatesInteraction() {
 	for {
 		select {
 		case update := <-standup.sectionUpdates:
+			// update.msg.FromUser appears to be nil and is causing a segmentation violation
+			// Update: &slick.Message{Msg:(*slack.Msg)(0xc0002d1680), SubMessage:(*slack.Msg)(nil), bot:(*slick.Bot)(0xc000182180), MentionsMe:true, IsEdit:false, FromMe:false, FromUser:(*slack.User)(nil), FromChannel:(*slick.Channel)(nil), Match:[]string(nil)}
 			userEmail := update.msg.FromUser.Profile.Email
 			progress := userProgressMap[userEmail]
 			if progress == nil {
 				progress = &userProgress{
-					sectionsDone: make(map[string]bool),
+					sectionsDone: map[string]bool{},
 					cancelTimer:  make(chan bool),
 				}
 				userProgressMap[userEmail] = progress

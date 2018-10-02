@@ -1,10 +1,11 @@
 package recognition
 
 import (
-	"log"
 	"strings"
 
-	"github.com/abourget/slick"
+	log "github.com/sirupsen/logrus"
+
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func (p *Plugin) listenUpvotes() {

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/abourget/slick"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 func (p *Plugin) listenTodo() {
@@ -181,7 +181,7 @@ func getTaskIndex(id string, todo Todo) (int, error) {
 }
 
 func (p *Plugin) replyHelp(msg *slick.Message, extra string) {
-	answer := extra + `Here's how you can get things orgnz'ed™:` + "```" + `
+	answer := extra + `Commands:` + "```" + `
 !todo add [some text]             - add task
 !todo                             - list tasks
 !todo scratch [id]                - deletes task(s)

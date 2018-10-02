@@ -3,12 +3,12 @@ package faceoff
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"strings"
 	"time"
 
-	"github.com/abourget/slick"
 	"github.com/nlopes/slack"
+	log "github.com/sirupsen/logrus"
+	"gitlab.com/capstonemetering/cerberus/slick"
 )
 
 //
@@ -97,10 +97,10 @@ func (g *Game) showChallenge(c *Challenge, lookedForUser slack.User, pngContent 
 	fmt.Println("*************************** before")
 
 	_, err = g.Faceoff.bot.Slack.UploadFile(slack.FileUploadParameters{
-		File:           "/tmp/faceoff.png",
-		Filetype:       "png",
-		Title:          fmt.Sprintf("Find: %s", lookedForUser.RealName),
-		Channels:       []string{g.Channel.ID},
+		File:     "/tmp/faceoff.png",
+		Filetype: "png",
+		Title:    fmt.Sprintf("Find: %s", lookedForUser.RealName),
+		Channels: []string{g.Channel.ID},
 	})
 	if err != nil {
 		g.OriginalMessage.Reply("error uploading faceoff image: %s", err)
