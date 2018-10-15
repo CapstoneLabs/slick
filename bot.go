@@ -16,7 +16,7 @@ import (
 
 	"github.com/boltdb/bolt"
 	"github.com/nlopes/slack"
-	"github.com/tuxychandru/pubsub"
+	"github.com/cskr/pubsub"
 )
 
 // Bot is the main slick bot instance. It is passed throughout, and

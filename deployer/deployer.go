@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/kr/pty"
-	"github.com/tuxychandru/pubsub"
+	"github.com/cskr/pubsub"
 
 	"github.com/CapstoneLabs/slick"
 	"github.com/CapstoneLabs/slick/internal"
