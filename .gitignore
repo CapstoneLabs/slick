@@ -27,10 +27,10 @@ _testmain.go
 *.sw*
 
 # Our bots!
-/plotbot/plotbot
-/plotbot/levdb/*
 /example-bot/example-bot
-/slick/slick
+
+# Coverage
+coverage.out
 
 *.orig
 *.test

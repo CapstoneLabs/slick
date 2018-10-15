@@ -40,14 +40,13 @@ type Channel struct {
 
 func ChannelFromSlackGroup(group slack.Group) Channel {
 	return Channel{
-		ID:       group.ID,
-		Created:  group.Created.Time(),
-		IsOpen:   group.IsOpen,
-		LastRead: group.LastRead,
-		Name:     group.Name,
-		Creator:  group.Creator,
-		Members:  group.Members,
-		//IsMember:   group.IsMember,  wh00ps, not there anymore.
+		ID:         group.ID,
+		Created:    group.Created.Time(),
+		IsOpen:     group.IsOpen,
+		LastRead:   group.LastRead,
+		Name:       group.Name,
+		Creator:    group.Creator,
+		Members:    group.Members,
 		IsArchived: group.IsArchived,
 		Topic:      group.Topic,
 		Purpose:    group.Purpose,
