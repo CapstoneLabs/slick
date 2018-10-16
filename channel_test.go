@@ -6,10 +6,10 @@ import (
 
 	"github.com/nlopes/slack"
 	log "github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/assert"
 )
 
-var (
-	simpleChannel = `{
+var simpleChannel = `{
 		"id": "C024BE91L",
 		"name": "fun",
 		"is_channel": true,
@@ -35,7 +35,8 @@ var (
 		"unread_count": 0,
 		"unread_count_display": 0
 	}`
-	simpleGroup = `{
+
+var simpleGroup = `{
 		"id": "G024BE91L",
 		"name": "secretplans",
 		"is_group": true,
@@ -59,7 +60,8 @@ var (
 		"unread_count": 0,
 		"unread_count_display": 0
 	}`
-	simpleIM = `{
+
+var simpleIM = `{
 		"id": "D024BFF1M",
 		"is_im": true,
 		"user": "U024BE7LH",
@@ -70,14 +72,34 @@ var (
 		"unread_count": 0,
 		"unread_count_display": 0
 	}`
-)
 
-func unmarshalIM(j string) (*slack.IM, error) {
-	im := &slack.IM{}
-	if err := json.Unmarshal([]byte(j), &im); err != nil {
+func unmarshalGroup(j string) (*slack.Group, error) {
+	group := &slack.Group{}
+	if err := json.Unmarshal([]byte(j), &group); err != nil {
 		return nil, err
 	}
-	return im, nil
+	return group, nil
+}
+
+func assertChannelFromSlackGroup(t *testing.T, slackGroup slack.Group, channel Channel) {
+	assert.Equal(t, slackGroup.ID, channel.ID)
+	assert.Equal(t, slackGroup.IsOpen, channel.IsOpen)
+	assert.Equal(t, slackGroup.LastRead, channel.LastRead)
+	assert.Equal(t, slackGroup.Name, channel.Name)
+	assert.Equal(t, slackGroup.Creator, channel.Creator)
+	assert.Equal(t, slackGroup.Members, channel.Members)
+	assert.Equal(t, slackGroup.IsArchived, channel.IsArchived)
+	assert.Equal(t, slackGroup.Topic, channel.Topic)
+	assert.Equal(t, slackGroup.Purpose, channel.Purpose)
+	assert.Equal(t, slackGroup.IsGroup, channel.IsGroup)
+}
+
+func TestChannelFromSlackGroup(t *testing.T) {
+	slackGroup, err := unmarshalGroup(simpleGroup)
+	assert.Nil(t, err)
+	channel := ChannelFromSlackGroup(*slackGroup)
+
+	assertChannelFromSlackGroup(t, *slackGroup, channel)
 }
 
 func unmarshalChannel(j string) (*slack.Channel, error) {
@@ -88,121 +110,50 @@ func unmarshalChannel(j string) (*slack.Channel, error) {
 	return channel, nil
 }
 
-func unmarshalGroup(j string) (*slack.Group, error) {
-	group := &slack.Group{}
-	if err := json.Unmarshal([]byte(j), &group); err != nil {
-		return nil, err
-	}
-	return group, nil
-}
-
-// These tests kind of suck. They should migrate to something like:
-// https://github.com/nlopes/slack/blob/master/conversation_test.go
-
-func TestChannelFromSlackGroup(t *testing.T) {
-	want, err := unmarshalGroup(simpleGroup)
-	if err != nil {
-		log.WithError(err).Error("Error unmarshalling JSON.")
-	}
-	got := ChannelFromSlackGroup(*want)
-
-	if got.ID != want.ID {
-		log.Error("Value mismatch")
-	}
-	if got.IsOpen != want.IsOpen {
-		log.Error("Value mismatch")
-	}
-	if got.LastRead != want.LastRead {
-		log.Error("Value mismatch")
-	}
-	if got.Name != want.Name {
-		log.Error("Value mismatch")
-	}
-	if got.Creator != want.Creator {
-		log.Error("Value mismatch")
-	}
-	if len(got.Members) != len(want.Members) {
-		log.Error("Value mismatch")
-	}
-	if got.IsArchived != want.IsArchived {
-		log.Error("Value mismatch")
-	}
-	if got.Topic != want.Topic {
-		log.Error("Value mismatch")
-	}
-	if got.Purpose != want.Purpose {
-		log.Error("Value mismatch")
-	}
-	if got.IsGroup != want.IsGroup {
-		log.Error("Value mismatch")
-	}
+func assertChannelFromSlackChannel(t *testing.T, slackChannel slack.Channel, channel Channel) {
+	assert.Equal(t, slackChannel.ID, channel.ID)
+	assert.Equal(t, slackChannel.IsOpen, channel.IsOpen)
+	assert.Equal(t, slackChannel.LastRead, channel.LastRead)
+	assert.Equal(t, slackChannel.Name, channel.Name)
+	assert.Equal(t, slackChannel.Creator, channel.Creator)
+	assert.Equal(t, slackChannel.Members, channel.Members)
+	assert.Equal(t, slackChannel.IsArchived, channel.IsArchived)
+	assert.Equal(t, slackChannel.Topic, channel.Topic)
+	assert.Equal(t, slackChannel.Purpose, channel.Purpose)
+	assert.Equal(t, slackChannel.IsGroup, channel.IsGroup)
 }
 
 func TestChannelFromSlackChannel(t *testing.T) {
-	want, err := unmarshalChannel(simpleChannel)
-	if err != nil {
-		log.WithError(err).Error("Error unmarshalling JSON.")
-	}
-	got := ChannelFromSlackChannel(*want)
+	slackChannel, err := unmarshalChannel(simpleChannel)
+	assert.Nil(t, err)
+	channel := ChannelFromSlackChannel(*slackChannel)
 
-	if got.ID != want.ID {
-		log.Error("Value mismatch")
+	assertChannelFromSlackChannel(t, *slackChannel, channel)
+}
+
+func unmarshalIM(j string) (*slack.IM, error) {
+	im := &slack.IM{}
+	if err := json.Unmarshal([]byte(j), &im); err != nil {
+		return nil, err
 	}
-	if got.IsOpen != want.IsOpen {
-		log.Error("Value mismatch")
-	}
-	if got.LastRead != want.LastRead {
-		log.Error("Value mismatch")
-	}
-	if got.Name != want.Name {
-		log.Error("Value mismatch")
-	}
-	if got.Creator != want.Creator {
-		log.Error("Value mismatch")
-	}
-	if len(got.Members) != len(want.Members) {
-		log.Error("Value mismatch")
-	}
-	if got.IsArchived != want.IsArchived {
-		log.Error("Value mismatch")
-	}
-	if got.Topic != want.Topic {
-		log.Error("Value mismatch")
-	}
-	if got.Purpose != want.Purpose {
-		log.Error("Value mismatch")
-	}
-	if got.IsGroup != want.IsGroup {
-		log.Error("Value mismatch")
-	}
+	return im, nil
+}
+
+func assertChannelFromSlackIM(t *testing.T, slackIM slack.IM, channel Channel) {
+	assert.Equal(t, slackIM.ID, channel.ID)
+	assert.Equal(t, slackIM.IsOpen, channel.IsOpen)
+	assert.Equal(t, slackIM.User, channel.Name)
+	assert.Equal(t, slackIM.User, channel.User)
+	assert.Equal(t, slackIM.IsUserDeleted, channel.IsUserDeleted)
+	assert.Equal(t, slackIM.IsIM, channel.IsIM)
 }
 
 func TestChannelFromSlackIM(t *testing.T) {
-	want, err := unmarshalIM(simpleIM)
+	slackIM, err := unmarshalIM(simpleIM)
 	if err != nil {
 		log.WithError(err).Error("Error unmarshalling JSON.")
 	}
-	got := ChannelFromSlackIM(*want)
+	channel := ChannelFromSlackIM(*slackIM)
 
-	if got.ID != want.ID {
-		log.Error("Value mismatch")
-	}
-	if got.IsOpen != want.IsOpen {
-		log.Error("Value mismatch")
-	}
-	if got.LastRead != want.LastRead {
-		log.Error("Value mismatch")
-	}
-	if got.Name != want.User {
-		log.Error("Value mismatch")
-	}
-	if got.User != want.User {
-		log.Error("Value mismatch")
-	}
-	if got.IsUserDeleted != want.IsUserDeleted {
-		log.Error("Value mismatch")
-	}
-	if got.IsIM != want.IsIM {
-		log.Error("Value mismatch")
-	}
+	assertChannelFromSlackIM(t, *slackIM, channel)
 }
