@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/nlopes/slack"
-	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -150,9 +149,7 @@ func assertChannelFromSlackIM(t *testing.T, slackIM slack.IM, channel Channel) {
 
 func TestChannelFromSlackIM(t *testing.T) {
 	slackIM, err := unmarshalIM(simpleIM)
-	if err != nil {
-		log.WithError(err).Error("Error unmarshalling JSON.")
-	}
+	assert.Nil(t, err)
 	channel := ChannelFromSlackIM(*slackIM)
 
 	assertChannelFromSlackIM(t, *slackIM, channel)
