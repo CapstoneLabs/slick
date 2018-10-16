@@ -87,7 +87,7 @@ func (tabula *TabulaRasa) GetFullTasksByAssignee(user asana.User, taskhose chan 
 		fulltask, err := tabula.asanaClient.GetTaskByID(task.ID)
 
 		if err != nil {
-			fmt.Println("Error aquiring full task GetFullTasksByAssignee", err)
+			fmt.Println("Error acquiring full task GetFullTasksByAssignee", err)
 			continue
 		}
 

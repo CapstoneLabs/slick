@@ -15,7 +15,7 @@ Supported features:
 * Simple API to message users privately
 * Simple API to update a previously sent message
 * Simple API to delete bot messages after a given time duration.
-* Easy plugin interface, listeners with criterias like:
+* Easy plugin interface, listeners with criteria such as:
   * Messages directed to the bot only
   * Private or public messages
   * Listens for a duration or until a given `time.Time`
