@@ -43,7 +43,7 @@ func (u *UpdateableReply) Update(format string, v ...interface{}) {
 	u.updateWithMode(updateWhole, format, v...)
 }
 
-func (u*UpdateableReply) newFormattedMessage() string {
+func (u *UpdateableReply) newFormattedMessage() string {
 	prevMessage := u.reply.OutgoingMessage.Text
 	switch u.updateMode {
 	case updateSuffix:
@@ -66,7 +66,6 @@ func (u *UpdateableReply) updateWithMode(mode updateMode, format string, v ...in
 
 	go u.dispatch()
 }
-
 
 type updateMode int
 

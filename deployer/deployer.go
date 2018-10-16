@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kr/pty"
 	"github.com/cskr/pubsub"
+	"github.com/kr/pty"
 
 	"github.com/CapstoneLabs/slick"
 	"github.com/CapstoneLabs/slick/internal"
