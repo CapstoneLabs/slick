@@ -12,7 +12,10 @@ type standupDate struct {
 }
 
 func getStandupDate(daysFromToday int) standupDate {
-	d := time.Now().Add(time.Duration(daysFromToday) * 24 * time.Hour)
+	d := time.Now()
+	if daysFromToday != 0 {
+		d = time.Now().Add(time.Duration(daysFromToday) * 24 * time.Hour)
+	}
 	return standupDate{
 		year:  d.Year(),
 		month: d.Month(),
@@ -46,9 +49,12 @@ func (sd standupDate) String() string {
 func (sd standupDate) Unix() int64 {
 	return time.Date(sd.year, sd.month, sd.day, 0, 0, 0, 0, time.Local).Unix()
 }
+func (sd standupDate) UnixUTC() int64 {
+	return time.Date(sd.year, sd.month, sd.day, 0, 0, 0, 0, time.UTC).Unix()
+}
 
 func (sd standupDate) toUnixUTCString() string {
-	return strconv.FormatInt(sd.Unix(), 10)
+	return strconv.FormatInt(sd.UnixUTC(), 10)
 }
 
 type standupDates []standupDate

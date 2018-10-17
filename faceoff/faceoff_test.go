@@ -109,10 +109,10 @@ func TestBuildImage(t *testing.T) {
 	c := &Challenge{}
 
 	_, err := c.BuildImage([]string{
-		"https://avatars.slack-edge.com/2013-12-15/2156040809_192.jpg",
-		"https://avatars.slack-edge.com/2016-03-14/26651220931_92fe2c6c1fe1735afa8c_192.jpg",
-		"https://avatars.slack-edge.com/2016-03-11/26182082134_269648f19b40d8a87878_192.jpg",
-		"https://avatars.slack-edge.com/2014-12-08/3167931031_42ef453717f47b15aa3b_192.jpg",
+		"http://i.pravatar.cc/300",
+		"http://i.pravatar.cc/300",
+		"http://i.pravatar.cc/300",
+		"http://i.pravatar.cc/300",
 	})
 
 	assert.NoError(t, err)

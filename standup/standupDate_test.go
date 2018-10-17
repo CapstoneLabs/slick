@@ -23,7 +23,24 @@ func TestNextDate(t *testing.T) {
 	if d.day != tomorrow.Day() {
 		t.Error("expected", d.day, "to be", tomorrow.Day())
 	}
+}
+func TestTomorrowDate(t *testing.T) {
 
+	tomorrow := time.Now().Add(24 * time.Hour)
+
+	d := getStandupDate(1)
+
+	if d.year != tomorrow.Year() {
+		t.Error("expected", d.year, "to be", tomorrow.Year())
+	}
+
+	if d.month != tomorrow.Month() {
+		t.Error("expected", d.month, "to be", tomorrow.Month())
+	}
+
+	if d.day != tomorrow.Day() {
+		t.Error("expected", d.day, "to be", tomorrow.Day())
+	}
 }
 
 func TestUnixAndBack(t *testing.T) {
