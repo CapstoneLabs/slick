@@ -29,10 +29,12 @@ type Message struct {
 	Match []string
 }
 
+// IsPrivate determines if a message is private or not
 func (msg *Message) IsPrivate() bool {
 	return strings.HasPrefix(msg.Channel, "D")
 }
 
+// ContainsAnyCased searches for at least one case-sensitive word
 func (msg *Message) ContainsAnyCased(strs []string) bool {
 	for _, s := range strs {
 		if strings.Contains(msg.Text, s) {
@@ -42,6 +44,7 @@ func (msg *Message) ContainsAnyCased(strs []string) bool {
 	return false
 }
 
+// ContainsAny searches for at least one noncase-sensitive matching string
 func (msg *Message) ContainsAny(strs []string) bool {
 	lowerStr := strings.ToLower(msg.Text)
 
@@ -55,6 +58,7 @@ func (msg *Message) ContainsAny(strs []string) bool {
 	return false
 }
 
+// ContainsAll searches for all strings in a noncase-sensitive fashion
 func (msg *Message) ContainsAll(strs []string) bool {
 
 	lowerStr := strings.ToLower(msg.Text)
@@ -69,6 +73,7 @@ func (msg *Message) ContainsAll(strs []string) bool {
 	return true
 }
 
+// Contains searches for a single string in a noncase-sensitive fashion
 func (msg *Message) Contains(s string) bool {
 	lowerStr := strings.ToLower(msg.Text)
 	lowerInput := strings.ToLower(s)
@@ -79,24 +84,29 @@ func (msg *Message) Contains(s string) bool {
 	return false
 }
 
+// HasPrefix returns true if a message starts with a given string
 func (msg *Message) HasPrefix(prefix string) bool {
 	return strings.HasPrefix(msg.Text, prefix)
 }
 
+// AddReaction adds a reaction to a message
 func (msg *Message) AddReaction(emoticon string) *Message {
 	msg.bot.Slack.AddReaction(emoticon, slack.NewRefToMessage(msg.Channel, msg.Timestamp))
 	return msg
 }
 
+// RemoveReaction removes a reaction from a message
 func (msg *Message) RemoveReaction(emoticon string) *Message {
 	msg.bot.Slack.RemoveReaction(emoticon, slack.NewRefToMessage(msg.Channel, msg.Timestamp))
 	return msg
 }
 
+// ListensReaction listens for a reaction on a message
 func (msg *Message) ListenReaction(reactListen *ReactionListener) {
 	msg.bot.ListenReaction(msg.Timestamp, reactListen)
 }
 
+// Reply sends a message back to the source it came from, without a mention
 func (msg *Message) Reply(text string, v ...interface{}) *Reply {
 	to := msg.User
 	if msg.Channel != "" {
@@ -106,6 +116,7 @@ func (msg *Message) Reply(text string, v ...interface{}) *Reply {
 	return msg.bot.SendOutgoingMessage(text, to)
 }
 
+// ReplyPrivately replies to the user in an IM
 func (msg *Message) ReplyPrivately(text string, v ...interface{}) *Reply {
 	text = Format(text, v...)
 	return msg.bot.SendPrivateMessage(msg.User, text)
@@ -124,6 +135,7 @@ func (msg *Message) ReplyMention(text string, v ...interface{}) *Reply {
 	return msg.Reply(fmt.Sprintf("%s%s", prefix, text), v...)
 }
 
+// String returns a message with field:value as a string
 func (msg *Message) String() string {
 	return fmt.Sprintf("%#v", msg)
 }
