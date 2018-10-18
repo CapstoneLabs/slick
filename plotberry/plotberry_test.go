@@ -5,7 +5,8 @@ import (
 	"testing"
 )
 
-func TestPlotlyWebside(t *testing.T) {
+// Tests whether the Plotly API is still functioning
+func TestPlotlyAPI(t *testing.T) {
 
 	resp, err := http.Get("https://plot.ly/v0/plotberries")
 	if err != nil {
