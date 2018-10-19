@@ -86,7 +86,7 @@ func (asana *Client) SetWorkspace(workspace string) {
 	asana.workspace = workspace
 }
 
-func (asana *Client) request(method string, uri string, strbody string) ([]byte, error) {
+func (asana *Client) Request(method string, uri string, strbody string) ([]byte, error) {
 
 	req, err := http.NewRequest(method, uri, bytes.NewBufferString(strbody))
 
@@ -139,7 +139,7 @@ func (asana *Client) GetTasksByAssignee(user User) ([]Task, error) {
 	url := fmt.Sprintf("https://app.asana.com/api/1.0/workspaces/%s/tasks?assignee=%v",
 		workspace, user.ID)
 
-	body, err := asana.request("GET", url, "")
+	body, err := asana.Request("GET", url, "")
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
@@ -157,7 +157,7 @@ func (asana *Client) GetTasksByTag(tagID string) ([]Task, error) {
 
 	url := fmt.Sprintf("https://app.asana.com/api/1.0/tags/%s/tasks", tagID)
 
-	body, err := asana.request("GET", url, "")
+	body, err := asana.Request("GET", url, "")
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
@@ -175,7 +175,7 @@ func (asana *Client) GetTaskStories(taskID int64) ([]Story, error) {
 
 	url := fmt.Sprintf("https://app.asana.com/api/1.0/tasks/%v/stories", taskID)
 
-	body, err := asana.request("GET", url, "")
+	body, err := asana.Request("GET", url, "")
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
@@ -193,7 +193,7 @@ func (asana *Client) GetUser(userID int64) (*User, error) {
 
 	url := fmt.Sprintf("https://app.asana.com/api/1.0/users/%v", userID)
 
-	body, err := asana.request("GET", url, "")
+	body, err := asana.Request("GET", url, "")
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
@@ -211,7 +211,7 @@ func (asana *Client) GetUsers() ([]User, error) {
 
 	url := "https://app.asana.com/api/1.0/users/"
 
-	body, err := asana.request("GET", url, "")
+	body, err := asana.Request("GET", url, "")
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
@@ -229,7 +229,7 @@ func (asana *Client) GetTaskByID(taskID int64) (*Task, error) {
 
 	url := fmt.Sprintf("https://app.asana.com/api/1.0/tasks/%v", taskID)
 
-	body, err := asana.request("GET", url, "")
+	body, err := asana.Request("GET", url, "")
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
@@ -249,7 +249,7 @@ func (asana *Client) GetTagsOnTask(tagID int64) ([]Tag, error) {
 
 	url := fmt.Sprintf("https://app.asana.com/api/1.0/tasks/%v/tags", tagID)
 
-	body, err := asana.request("GET", url, "")
+	body, err := asana.Request("GET", url, "")
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
@@ -268,7 +268,7 @@ func (asana *Client) UpdateTask(updateStr string, task Task) (*Task, error) {
 
 	url := fmt.Sprintf("https://app.asana.com/api/1.0/tasks/%v", task.ID)
 
-	body, err := asana.request("PUT", url, updateStr)
+	body, err := asana.Request("PUT", url, updateStr)
 	if err != nil {
 		log.WithError(err).Error()
 		return nil, err
