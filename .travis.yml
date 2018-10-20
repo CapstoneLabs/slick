@@ -1,0 +1,19 @@
+language: go
+
+# Always use a string here, floats can result in unintended consequences
+go:
+- "1.11.x"
+
+stages:
+- name: "Testing" # Fires every time
+- name: "Build"
+  if: branch = master
+- name: "Deploy"
+  if: branch = master
+
+jobs:
+  include:
+  - stage: "Testing"
+    name: "Pre-commit"
+    script:
+    - ./scripts/pre-commit.sh
