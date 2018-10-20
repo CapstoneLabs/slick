@@ -16,6 +16,6 @@ jobs:
   - stage: "Testing"
     name: "Pre-commit"
     install:
-    - env GO111MODULES=on go get ./...
+    - make get
     script:
     - make
