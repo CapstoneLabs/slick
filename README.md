@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.com/CapstoneLabs/slick.svg?branch=master)
+
 # Slick - A Slack bot in Go
 
 Slick is a Slack bot to do ChatOps and other cool things. Slick was originally developed [here](https://github.com/abourget/slick) and has since been adopted by Capstone for internal use :)
@@ -50,15 +52,13 @@ Supported features:
 
 Try it with:
 
-```
+```shell
 go get github.com/CapstoneLabs/slick
 cd $GOPATH/src/github.com/CapstoneLabs/slick/example-bot
 go install -v && $GOPATH/bin/example-bot
 ```
 
-Copy the `slick.sample.conf` file to `$HOME/.slick` and tweak at will.
-
-You might need `mercurial` installed to get some dependencies.
+There's a Dockerfile and example configuration in the `example-bot` directory.
 
 ## Writing your own plugin
 
