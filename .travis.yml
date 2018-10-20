@@ -16,6 +16,6 @@ jobs:
   - stage: "Testing"
     name: "Pre-commit"
     install:
-    - go get ./...
+    - make get
     script:
-    - ./scripts/pre-commit.sh
+    - make
