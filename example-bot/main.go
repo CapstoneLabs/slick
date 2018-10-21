@@ -6,7 +6,6 @@ import (
 
 	"github.com/CapstoneLabs/slick"
 	_ "github.com/CapstoneLabs/slick/bugger"
-	_ "github.com/CapstoneLabs/slick/deployer"
 	_ "github.com/CapstoneLabs/slick/faceoff"
 	_ "github.com/CapstoneLabs/slick/funny"
 	_ "github.com/CapstoneLabs/slick/healthy"
@@ -16,7 +15,6 @@ import (
 	_ "github.com/CapstoneLabs/slick/recognition"
 	_ "github.com/CapstoneLabs/slick/standup"
 	_ "github.com/CapstoneLabs/slick/todo"
-	_ "github.com/CapstoneLabs/slick/totw"
 	_ "github.com/CapstoneLabs/slick/web"
 	_ "github.com/CapstoneLabs/slick/webauth"
 	_ "github.com/CapstoneLabs/slick/webutils"
