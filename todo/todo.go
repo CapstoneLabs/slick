@@ -1,3 +1,4 @@
+// Package todo is a plugin for Slick that creates to do lists per channel
 package todo
 
 import (

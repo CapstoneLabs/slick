@@ -1,3 +1,4 @@
+// Package vote is a plugin for Slick that aids in picking a lunch spot
 package vote
 
 import (

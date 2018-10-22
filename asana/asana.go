@@ -1,3 +1,4 @@
+// Package asana is a plugin for Slick that interacts with Asana
 package asana
 
 import (

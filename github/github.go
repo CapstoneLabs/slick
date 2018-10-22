@@ -1,9 +1,9 @@
+// Package GitHub is a plugin for Slick that interacts with GitHub
 package github
 
 import (
 	"encoding/json"
 	"io/ioutil"
-
 	"net/http"
 	"strconv"
 	"time"

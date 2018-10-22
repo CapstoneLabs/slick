@@ -1,3 +1,4 @@
+// Package standup is a plugin for Slick that facilitates standups for teams
 package standup
 
 import "github.com/CapstoneLabs/slick"

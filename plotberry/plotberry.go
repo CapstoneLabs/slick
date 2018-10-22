@@ -1,3 +1,4 @@
+// Package plotberry is a plugin for Slick that reads Plotly graphs
 package plotberry
 
 import (

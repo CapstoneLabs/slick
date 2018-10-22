@@ -1,3 +1,4 @@
+// Package slick is a ChatOps framework for Slack
 package slick
 
 import (
@@ -12,11 +13,10 @@ import (
 	"sync"
 	"time"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/boltdb/bolt"
 	"github.com/cskr/pubsub"
 	"github.com/nlopes/slack"
+	log "github.com/sirupsen/logrus"
 )
 
 // Bot is the main slick bot instance. It is passed throughout, and

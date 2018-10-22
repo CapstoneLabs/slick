@@ -1,3 +1,4 @@
+// Package wicked is a plugin for Slick that facilitates conferences over Slack
 package wicked
 
 /**

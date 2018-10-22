@@ -1,3 +1,4 @@
+// Package recognition is a plugin for Slick that recognizes team members
 package recognition
 
 import (
@@ -6,10 +7,9 @@ import (
 	"strings"
 	"time"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/CapstoneLabs/slick"
 	"github.com/nlopes/slack"
+	log "github.com/sirupsen/logrus"
 )
 
 func (p *Plugin) listenRecognize() {

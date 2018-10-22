@@ -1,3 +1,4 @@
+// Package healthy is a Slick plugin that evaluates whether URLs return 200's or not
 package healthy
 
 import (
@@ -9,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Hipbot Plugin
+// Healthy is a struct holding URL's to evaluate
 type Healthy struct {
 	urls []string
 }
@@ -18,6 +19,7 @@ func init() {
 	slick.RegisterPlugin(&Healthy{})
 }
 
+// InitPlugin loads configuration and listens for new messages
 func (healthy *Healthy) InitPlugin(bot *slick.Bot) {
 	var conf struct {
 		HealthCheck struct {
@@ -36,12 +38,13 @@ func (healthy *Healthy) InitPlugin(bot *slick.Bot) {
 	})
 }
 
-// Handler
+// ChatHandler replies to the end user
 func (healthy *Healthy) ChatHandler(listen *slick.Listener, msg *slick.Message) {
 	log.Println("Health check. Requested by", msg.FromUser.Name)
 	msg.Reply(healthy.CheckAll())
 }
 
+// CheckAll checks each URL in the struct
 func (healthy *Healthy) CheckAll() string {
 	result := make(map[string]bool)
 	failed := make([]string, 0)
