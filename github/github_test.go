@@ -42,7 +42,7 @@ var IssueItemWithNumber = IssueItem{
 }
 
 var config = Conf{
-	Repos: []string{"3sky/slick"},
+	Repos: []string{"CapstoneLabs/slick"},
 }
 
 var TestClient = Client{Conf: config}
