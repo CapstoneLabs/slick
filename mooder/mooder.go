@@ -38,11 +38,11 @@ func (mooder *Mooder) SetupMoodChanger() {
 		//bot.SendToChannel(bot.Config.GeneralChannel, bot.WithMood("I'm quite happy today.", "I can haz!! It's going to be a great one today!!"))
 
 		select {
-		case <-slick.AfterNextWeekdayTime(time.Monday, 12, 0):
-		case <-slick.AfterNextWeekdayTime(time.Tuesday, 12, 0):
-		case <-slick.AfterNextWeekdayTime(time.Wednesday, 12, 0):
-		case <-slick.AfterNextWeekdayTime(time.Thursday, 12, 0):
-		case <-slick.AfterNextWeekdayTime(time.Friday, 12, 0):
+		case <-slick.AfterNextWeekdayTime(time.Now(), time.Monday, 12, 0):
+		case <-slick.AfterNextWeekdayTime(time.Now(), time.Tuesday, 12, 0):
+		case <-slick.AfterNextWeekdayTime(time.Now(), time.Wednesday, 12, 0):
+		case <-slick.AfterNextWeekdayTime(time.Now(), time.Thursday, 12, 0):
+		case <-slick.AfterNextWeekdayTime(time.Now(), time.Friday, 12, 0):
 		}
 	}
 }

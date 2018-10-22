@@ -61,7 +61,7 @@ func (totw *Totw) ChatHandler(conv *slick.Listener, msg *slick.Message) {
 
 func (totw *Totw) ScheduleAlerts(channel string, w time.Weekday, hour, min int) {
 	for {
-		next, when := slick.NextWeekdayTime(w, hour, min)
+		next, when := slick.NextWeekdayTime(time.Now(), w, hour, min)
 		log.Println("TOTW: Next occurrence: ", next)
 
 		<-time.After(when)
