@@ -4,10 +4,11 @@ require (
 	github.com/boltdb/bolt v1.3.1
 	github.com/codegangsta/negroni v1.0.0
 	github.com/cskr/pubsub v1.0.1
+	github.com/gobuffalo/envy v1.6.5 // indirect
+	github.com/gohugoio/hugo v0.49.2 // indirect
 	github.com/gorilla/context v1.1.1
 	github.com/gorilla/mux v1.6.2
 	github.com/gorilla/sessions v1.1.3
-	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/jmcvetta/napping v3.2.0+incompatible
 	github.com/kr/pty v1.1.3
 	github.com/lusis/slack-test v0.0.0-20180109053238-3c758769bfa6 // indirect
