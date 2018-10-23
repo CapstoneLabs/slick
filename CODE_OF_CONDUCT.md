@@ -1,3 +1,6 @@
+<!-- Ensure to update docs-src/content/code-of-conduct/_index.md -->
+<!-- Make sure email at the bottom remains in tact -->
+
 # Code of Conduct
 
 ## Our Pledge
