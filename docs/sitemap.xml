@@ -3,29 +3,29 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://slick.githubpages.io/plugins/</loc>
+    <loc>https://capstonelabs.github.io/slick/plugins/</loc>
   </url>
   
   <url>
-    <loc>https://slick.githubpages.io/press-kit/</loc>
+    <loc>https://capstonelabs.github.io/slick/press-kit/</loc>
   </url>
   
   <url>
-    <loc>https://slick.githubpages.io/code-of-conduct/</loc>
+    <loc>https://capstonelabs.github.io/slick/code-of-conduct/</loc>
   </url>
   
   <url>
-    <loc>https://slick.githubpages.io/categories/</loc>
+    <loc>https://capstonelabs.github.io/slick/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://slick.githubpages.io/tags/</loc>
+    <loc>https://capstonelabs.github.io/slick/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://slick.githubpages.io/</loc>
+    <loc>https://capstonelabs.github.io/slick/</loc>
   </url>
   
 </urlset>
