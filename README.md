@@ -65,7 +65,7 @@ There's a Dockerfile and example configuration in the `example-bot` directory.
 
 Example code to handle deployments:
 
-```
+```go
 // listenDeploy was hooked into a plugin elsewhere..
 func listenDeploy() {
 	keywords := []string{"project1", "project2", "project3"}
