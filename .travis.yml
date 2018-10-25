@@ -1,21 +1,22 @@
+dist: trusty # use the newer operating system
+sudo: false # run our builds in containers
 language: go
-
-# Always use a string here, floats can result in unintended consequences
 go:
-- "1.11.x"
-
+- 1.11.x
 stages:
-- name: "Testing" # Fires every time
-- name: "Build"
-  if: branch = master
-- name: "Deploy"
-  if: branch = master
-
+- name: Testing
+- name: Build
 jobs:
   include:
-  - stage: "Testing"
-    name: "Pre-commit"
+  - stage: Testing
+    name: Pre-commit
     install:
     - make get
     script:
     - make
+  - stage: Build
+    name: Build
+    install:
+    - make get
+    script:
+    - make build
