@@ -10,23 +10,28 @@ type Logging struct {
 	Type  string `json:"type" mapstructure:"type"`
 }
 
-func (bot *Bot) setupLogging() error {
-	// Set the formatter
+// getLoggingConfig return the corresponding formatter and level for logging.
+func getLoggingConfig(bot *Bot) (log.Formatter, log.Level) {
+	var f log.Formatter
+
 	switch bot.Logging.Type {
 	case "json":
-		log.SetFormatter(&log.JSONFormatter{})
+		f = &log.JSONFormatter{}
 	default:
-		log.SetFormatter(&log.TextFormatter{})
+		f = &log.TextFormatter{}
 	}
 
-	// Correlate a level from a string
-	level, err := log.ParseLevel(bot.Logging.Level)
+	l, err := log.ParseLevel(bot.Logging.Level)
 	if err != nil {
-		level = log.InfoLevel
+		l = log.InfoLevel
 	}
+	return f, l
+}
 
-	// Set the level
+// setupLogging choose the config and setup the logging.
+func (bot *Bot) setupLogging() error {
+	formatter, level := getLoggingConfig(bot)
+	log.SetFormatter(formatter)
 	log.SetLevel(level)
-
 	return nil
 }
