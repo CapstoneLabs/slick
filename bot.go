@@ -17,6 +17,7 @@ import (
 	"github.com/cskr/pubsub"
 	"github.com/nlopes/slack"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 // Bot is the main slick bot instance. It is passed throughout, and
@@ -152,7 +153,7 @@ func (bot *Bot) Run() {
 func (bot *Bot) writePID() error {
 	var serverConf struct {
 		Server struct {
-			Pidfile string `json:"pid_file"`
+			Pidfile string `mapstructure:"pid_file"`
 		}
 	}
 
@@ -274,9 +275,8 @@ func (bot *Bot) cacheChannels(channels []slack.Channel, groups []slack.Group, im
 }
 
 func (bot *Bot) loadBaseConfig() {
-	if err := checkPermission(bot.configFile); err != nil {
-		log.WithError(err).Fatal("Error checking permissions.")
-	}
+
+	bot.readInConfig() // Find and parse the config file
 
 	var config struct {
 		Logging Logging
@@ -292,18 +292,36 @@ func (bot *Bot) loadBaseConfig() {
 	bot.Logging = config.Logging
 }
 
-// LoadConfig reads the config file, unmarshals JSON
-func (bot *Bot) LoadConfig(config interface{}) (err error) {
-	content, err := ioutil.ReadFile(bot.configFile)
-	if err != nil {
-		log.WithError(err).Error("Error reading config file.")
-		return err
+// readInConfig reads the config file, unmarshals the given format (JSON, YAML or TOML)
+// and makes the result available for later use in LoadConfig()
+func (bot *Bot) readInConfig() {
+
+	// Use viper to find a default config file, or open the provided file is set
+	if bot.configFile == "" {
+		viper.SetConfigName("config")
+		viper.AddConfigPath(".")            // Look for config in the working directory
+		viper.AddConfigPath("$HOME/.slick") // Look for config in .slick folder in home directory
+	} else {
+		// Ensure the config file cannot be read of write by others
+		if err := checkPermission(bot.configFile); err != nil {
+			log.WithError(err).Fatal("Error checking permissions.")
+		}
+
+		viper.SetConfigFile(bot.configFile)
 	}
 
-	err = json.Unmarshal(content, &config)
-	if err != nil {
-		log.WithError(err).Error("Error in config JSON syntax.")
+	err := viper.ReadInConfig() // Find and read the config file
+	if err != nil {             // Return an error if the config file cannot be parsed
+		log.WithError(err).Fatalf("fatal error config file: %s", err)
+	}
+}
 
+// LoadConfig populates a given struct with the values from the config file
+func (bot *Bot) LoadConfig(config interface{}) (err error) {
+
+	err = viper.Unmarshal(&config)
+	if err != nil {
+		log.WithError(err).Errorf("unable to decode into struct, %v", err)
 		return err
 	}
 

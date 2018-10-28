@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"os"
 
 	"github.com/CapstoneLabs/slick"
 	_ "github.com/CapstoneLabs/slick/bugger"
@@ -21,7 +20,11 @@ import (
 	_ "github.com/CapstoneLabs/slick/wicked"
 )
 
-var configFile = flag.String("config", os.Getenv("HOME")+"/.slick.conf", "config file")
+// Specify an alternative config file. Slick searches the working
+// directory and your home folder by default for a file called
+// `config.json`, `config.yaml`, or `config.toml` if no config
+// file is specified
+var configFile = flag.String("config", "", "config file")
 
 func main() {
 	flag.Parse()

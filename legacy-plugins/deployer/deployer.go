@@ -29,12 +29,12 @@ type Deployer struct {
 }
 
 type DeployerConfig struct {
-	RepositoryPath          string   `json:"repository_path"`
-	AnnounceRoom            string   `json:"announce_room"`
-	ProgressRoom            string   `json:"progress_room"`
-	DefaultDeploymentBranch string   `json:"default_deployment_branch"`
-	DefaultStreambedBranch  string   `json:"default_streambed_branch"`
-	AllowedProdBranches     []string `json:"allowed_prod_branches"`
+	RepositoryPath          string   `json:"repository_path" mapstructure:"repository_path"`
+	AnnounceRoom            string   `json:"announce_room" mapstructure:"announce_room"`
+	ProgressRoom            string   `json:"progress_room" mapstructure:"progress_room"`
+	DefaultDeploymentBranch string   `json:"default_deployment_branch" mapstructure:"default_deployment_branch"`
+	DefaultStreambedBranch  string   `json:"default_streambed_branch" mapstructure:"default_streambed_branch"`
+	AllowedProdBranches     []string `json:"allowed_prod_branches" mapstructure:"allowed_prod_branches"`
 }
 
 func init() {

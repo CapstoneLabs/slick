@@ -9,13 +9,13 @@ type SlackConfig struct {
 	Username       string
 	Password       string
 	Nickname       string
-	JoinChannels   []string `json:"join_channels"`
-	GeneralChannel string   `json:"general_channel"`
-	TeamDomain     string   `json:"team_domain"`
-	TeamID         string   `json:"team_id"`
-	ApiToken       string   `json:"api_token"`
-	WebBaseURL     string   `json:"web_base_url"`
-	DBPath         string   `json:"db_path"`
+	JoinChannels   []string `json:"join_channels" mapstructure:"join_channels"`
+	GeneralChannel string   `json:"general_channel" mapstructure:"general_channel"`
+	TeamDomain     string   `json:"team_domain" mapstructure:"team_domain"`
+	TeamID         string   `json:"team_id" mapstructure:"team_id"`
+	ApiToken       string   `json:"api_token" mapstructure:"api_token"`
+	WebBaseURL     string   `json:"web_base_url" mapstructure:"web_base_url"`
+	DBPath         string   `json:"db_path" mapstructure:"db_path"`
 	Debug          bool
 }
 

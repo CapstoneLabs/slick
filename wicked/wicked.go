@@ -44,7 +44,7 @@ func (wicked *Wicked) InitPlugin(bot *slick.Bot) {
 
 	var conf struct {
 		Wicked struct {
-			Confrooms []string `json:"conf_rooms"`
+			Confrooms []string `json:"conf_rooms" mapstructure:"conf_rooms"`
 		}
 	}
 

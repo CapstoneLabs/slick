@@ -13,8 +13,8 @@ RUN adduser -S -D -H -h /app appuser
 USER appuser
 RUN id
 COPY --from=builder /go/bin/example-bot /app/
-COPY --from=builder --chown=appuser:nogroup /slick/example-bot/plotbot.sample.conf /app/.slick.conf
+COPY --from=builder --chown=appuser:nogroup /slick/example-bot/config.json /app/config.json
 WORKDIR /app 
 RUN ls -la
-RUN chmod 600 .slick.conf
+RUN chmod 600 config.json
 CMD ["./example-bot"] 

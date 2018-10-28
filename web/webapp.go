@@ -31,9 +31,9 @@ type Webapp struct {
 }
 
 type WebappConfig struct {
-	Listen            string `json:"listen"`
-	SessionAuthKey    string `json:"session_auth_key"`
-	SessionEncryptKey string `json:"session_encrypt_key"`
+	Listen            string `json:"listen" mapstructure:"listen"`
+	SessionAuthKey    string `json:"session_auth_key" mapstructure:"session_auth_key"`
+	SessionEncryptKey string `json:"session_encrypt_key" mapstructure:"session_encrypt_key"`
 }
 
 func init() {

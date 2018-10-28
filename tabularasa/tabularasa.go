@@ -21,8 +21,8 @@ func init() {
 func (tabula *TabulaRasa) InitWebPlugin(bot *slick.Bot, privRouter *mux.Router, pubRouter *mux.Router) {
 	var asanaConf struct {
 		Asana struct {
-			APIKey    string `json:"api_key"`
-			Workspace string `json:"workspace"`
+			APIKey    string `json:"api_key" mapstructure:"api_key"`
+			Workspace string `json:"workspace" mapstructure:"workspace"`
 		}
 	}
 

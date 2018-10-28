@@ -24,9 +24,9 @@ type OAuthPlugin struct {
 }
 
 type OAuthConfig struct {
-	RedirectURL  string `json:"oauth_base_url"`
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
+	RedirectURL  string `json:"oauth_base_url" mapstructure:"oauth_base_url"`
+	ClientID     string `json:"client_id" mapstructure:"client_id"`
+	ClientSecret string `json:"client_secret" mapstructure:"client_secret"`
 }
 
 func (p *OAuthPlugin) InitWebServerAuth(bot *slick.Bot, webserver slick.WebServer) {

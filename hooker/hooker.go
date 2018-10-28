@@ -22,8 +22,8 @@ type Hooker struct {
 }
 
 type HookerConfig struct {
-	StripeSecret string `json:"stripe_secret"`
-	GitHubSecret string `json:"github_secret"`
+	StripeSecret string `json:"stripe_secret" mapstructure:"stripe_secret"`
+	GitHubSecret string `json:"github_secret" mapstructure:"github_secret"`
 }
 
 type MonitAlert struct {
