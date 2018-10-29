@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// SlackConfig holds the configuration to connect with a given slack organization
 type SlackConfig struct {
 	Username       string
 	Password       string

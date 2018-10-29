@@ -14,12 +14,16 @@ import (
 // Bot plugins
 //
 
+// Plugin describes the generic bot plugin
 type Plugin interface{}
 
+// PluginInitializer describes the interface is used to check which plugins
+// can be initialized during plugin initalization initChatPlugins
 type PluginInitializer interface {
 	InitPlugin(*Bot)
 }
 
+// WebServer describes the interface for webserver plugins
 type WebServer interface {
 	// Used internally by the `slick` library.
 	InitWebServer(*Bot, []string)
@@ -48,10 +52,12 @@ type WebServerAuth interface {
 
 var registeredPlugins = make([]Plugin, 0)
 
+// RegisterPlugin adds the provided Plugin to the list of registered plugins
 func RegisterPlugin(plugin Plugin) {
 	registeredPlugins = append(registeredPlugins, plugin)
 }
 
+// RegisteredPlugins returns the list of registered plugins
 func RegisteredPlugins() []Plugin {
 	return registeredPlugins
 }
@@ -88,7 +94,7 @@ func initWebPlugins(bot *Bot) {
 
 		count := 0
 		if webServerAuth, ok := plugin.(WebServerAuth); ok {
-			count += 1
+			count++
 
 			if count > 1 {
 				log.Fatalln("Can not load two WebServerAuth plugins. Already loaded one.")

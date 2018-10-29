@@ -34,7 +34,8 @@ func (bot *Bot) GetDBKey(key string, v interface{}) error {
 	})
 }
 
-// SetDBKey sets a
+// PutDBKey sets a key to the specified value in the persistent storage
+// it JSON marshals the value before storing it.
 func (bot *Bot) PutDBKey(key string, v interface{}) error {
 	return bot.DB.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte(slickDBDefaultBucket))

@@ -10,6 +10,8 @@ import (
 	"github.com/nlopes/slack"
 )
 
+// Listener monitors slack for matching incoming messages and then
+// handles them using a MessageHandlerFunc or EventHandlerFunc
 type Listener struct {
 	// replyAck is filled when you call Listen() on a Reply.
 	replyAck *slack.AckMessage
@@ -167,19 +169,19 @@ func (listen *Listener) timeoutDuration() (timeout time.Duration) {
 
 func (listen *Listener) checkParams() error {
 	if !listen.ListenUntil.IsZero() && int64(listen.ListenDuration) != 0 {
-		return fmt.Errorf("specify `ListenUntil` *or* `ListenDuration`, not both.")
+		return fmt.Errorf("specify `ListenUntil` *or* `ListenDuration`, not both")
 	}
 
 	if listen.PrivateOnly && listen.PublicOnly {
-		return fmt.Errorf("`PrivateOnly` and `PublicOnly` are mutually exclusive.")
+		return fmt.Errorf("`PrivateOnly` and `PublicOnly` are mutually exclusive")
 	}
 
 	if listen.Contains != "" && len(listen.ContainsAny) > 0 {
-		return fmt.Errorf("`Contains` and `ContainsAny` are mutually exclusive.")
+		return fmt.Errorf("`Contains` and `ContainsAny` are mutually exclusive")
 	}
 
 	if (listen.MessageHandlerFunc == nil && listen.EventHandlerFunc == nil) || (listen.MessageHandlerFunc != nil && listen.EventHandlerFunc != nil) {
-		return fmt.Errorf("One and only one of `MessageHandlerFunc` and `EventHandlerFunc` is required.")
+		return fmt.Errorf("one and only one of `MessageHandlerFunc` and `EventHandlerFunc` is required")
 	}
 
 	return nil

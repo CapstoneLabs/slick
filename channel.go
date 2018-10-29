@@ -38,6 +38,7 @@ type Channel struct {
 	Purpose slack.Purpose
 }
 
+// ChannelFromSlackGroup converts a slack group to a Channel Struct
 func ChannelFromSlackGroup(group slack.Group) Channel {
 	return Channel{
 		ID:         group.ID,
@@ -54,6 +55,7 @@ func ChannelFromSlackGroup(group slack.Group) Channel {
 	}
 }
 
+// ChannelFromSlackChannel converts a slack channel to a Channel Struct
 func ChannelFromSlackChannel(channel slack.Channel) Channel {
 	return Channel{
 		ID:         channel.ID,
@@ -70,6 +72,8 @@ func ChannelFromSlackChannel(channel slack.Channel) Channel {
 		IsChannel:  true,
 	}
 }
+
+// ChannelFromSlackIM converts a slack IM to a Channel Struct
 func ChannelFromSlackIM(im slack.IM) Channel {
 	return Channel{
 		ID:            im.ID,

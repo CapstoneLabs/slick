@@ -13,6 +13,7 @@ type botReply struct {
 	Text string
 }
 
+// Message represents a specific slack message
 type Message struct {
 	*slack.Msg
 	SubMessage  *slack.Msg
@@ -101,7 +102,7 @@ func (msg *Message) RemoveReaction(emoticon string) *Message {
 	return msg
 }
 
-// ListensReaction listens for a reaction on a message
+// ListenReaction listens for a reaction on a message
 func (msg *Message) ListenReaction(reactListen *ReactionListener) {
 	msg.bot.ListenReaction(msg.Timestamp, reactListen)
 }

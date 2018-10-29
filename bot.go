@@ -56,6 +56,10 @@ type Bot struct {
 	Mood      Mood
 }
 
+// New returns a new bot instance, initialized with the provided config
+// file. If an empty string is provided as the config file path, Slick
+// searches the working directy and $HOME/.slick/ for a file called
+// config.json|toml|yaml instead
 func New(configFile string) *Bot {
 	bot := &Bot{
 		configFile:    configFile,
@@ -78,6 +82,7 @@ func New(configFile string) *Bot {
 	return bot
 }
 
+// Run starts the bot
 func (bot *Bot) Run() {
 	// Config for Slack and logging are read in
 	bot.loadBaseConfig()
@@ -96,7 +101,7 @@ func (bot *Bot) Run() {
 
 	db, err := bolt.Open(bot.Config.DBPath, 0600, nil)
 	if err != nil {
-		log.Fatalf("Could not initialize BoltDB key/value store: %s", err)
+		log.WithError(err).Fatalf("Could not initialize BoltDB key/value store: %s", err)
 	}
 	defer func() {
 		log.Fatal("Database is closing")
@@ -754,6 +759,8 @@ func (bot *Bot) GetChannelByName(name string) *Channel {
 	return nil
 }
 
+// GetIMChannelWith returns the channel used to communicate with the
+// specified slack user
 func (bot *Bot) GetIMChannelWith(user *slack.User) *Channel {
 	for _, channel := range bot.Channels {
 		if !channel.IsIM {
@@ -766,6 +773,7 @@ func (bot *Bot) GetIMChannelWith(user *slack.User) *Channel {
 	return nil
 }
 
+// OpenIMChannelWith opens a conversation with the given slack User
 func (bot *Bot) OpenIMChannelWith(user *slack.User) *Channel {
 	dmChannel := bot.GetIMChannelWith(user)
 	if dmChannel != nil {
