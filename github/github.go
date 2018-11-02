@@ -94,7 +94,6 @@ func (ghclient *Client) Get(url string) (body []byte, err error) {
 	if err != nil {
 		return
 	}
-	req.SetBasicAuth(ghclient.Conf.Authtoken, "x-oauth-basic")
 
 	client := http.Client{}
 	res, err := client.Do(req)
